@@ -25,13 +25,13 @@ namespace MauiAppTempoSQLite.Helpers
 
         public Task<List<Tempo>> GetAll()
         {
-            return _conn.Table<Tempo>().ToListAsync();
+            return _conn.Table<Tempo>().OrderByDescending(i => i.Id).ToListAsync();
         }
 
         public Task<List<Tempo>> Search(string q)
         {
             string sql = "SELECT * FROM Tempo " +
-                         "WHERE description LIKE '%" + q + "%'";
+                         "WHERE Cidade LIKE '%" + q + "%'";
 
             return _conn.QueryAsync<Tempo>(sql);
         }

@@ -3,17 +3,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppTempoSQLite.MainPage">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="cabecalho_listview" TargetType="Grid">
+                <Setter Property="BackgroundColor"
+                    Value="{AppThemeBinding Light={StaticResource Gray100}, 
+                                        Dark={StaticResource Primary}}" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ScrollView>
         <VerticalStackLayout
          Padding="30,0"
          Spacing="25">
-
-            <Entry x:Name="txt_cidade" />
-            <Button Text="Buscar Previsão" Clicked="Button_Clicked" />
-
+            <StackLayout Orientation="Horizontal">
+                <SearchBar x:Name="txt_cidade" HorizontalOptions="FillAndExpand" Margin="0, 0, 10, 0" />
+                <Button Text="Buscar Previsão" Clicked="Button_Clicked" />
+            </StackLayout>        
+            
             <Label x:Name="lbl_res" />
-           
 
+            <StackLayout>
+
+                <StackLayout Orientation="Horizontal">
+                    <SearchBar x:Name="txt_search"
+                               HorizontalOptions="FillAndExpand"
+                              Placeholder="Busca de Previsões"
+                              TextChanged="txt_search_TextChanged">
+                        <SearchBar.Margin>
+                            <OnPlatform  x:TypeArguments="Thickness">
+                                <On Platform="Android" Value="-15, 0, 0, 0" />
+                                <On Platform="UWP" Value="5, 0, 5, 0" />
+                            </OnPlatform>
+                        </SearchBar.Margin>
+                    </SearchBar>
+                    <DatePicker />
+                    <DatePicker />
+
+                </StackLayout>
+                
+             
+
+                <Frame Padding="0" Margin="10" VerticalOptions="FillAndExpand">
+                    <ListView x:Name="lst_previsoes_tempo"
+                              IsPullToRefreshEnabled="True"
+                              Refreshing="lst_previsoes_tempo_Refreshing"
+                              ItemSelected="lst_previsoes_tempo_ItemSelected">
+                        <ListView.Header>
+                            <Grid ColumnDefinitions="*, *, *, *, *, *"                                  
+                                  Style="{StaticResource Key=cabecalho_listview}">
+                                <Label Grid.Column="0" Text="ID" Padding="5" FontAttributes="Bold" />
+                                <Label Grid.Column="1" Text="Cidade" Padding="5" FontAttributes="Bold" />
+                                <Label Grid.Column="2" Text="Data" Padding="5" FontAttributes="Bold" />
+                                <Label Grid.Column="3" Text="Previsão" FontAttributes="Bold" />
+                                <Label Grid.Column="4" Text="Máxima" FontAttributes="Bold" />
+                                <Label Grid.Column="5" Text="Min" FontAttributes="Bold" />                                
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ViewCell.ContextActions>
+                                        <MenuItem Text="Remover" Clicked="MenuItem_Clicked" />
+                                    </ViewCell.ContextActions>
+                                    <Grid ColumnDefinitions="*, *, *, *, *, *">
+                                        <Label Grid.Column="0" Text="{Binding Id}" Padding="5" />
+                                        <Label Grid.Column="1" Text="{Binding Cidade}" Padding="5" />
+                                        <Label Grid.Column="2" Text="{Binding DataConsulta}" Padding="5" />
+                                        <Label Grid.Column="3" Text="{Binding description}" />
+                                        <Label Grid.Column="4" Text="{Binding temp_max}" />
+                                        <Label Grid.Column="5" Text="{Binding temp_min}" />
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Frame>
+            </StackLayout>
         </VerticalStackLayout>
     </ScrollView>
 
